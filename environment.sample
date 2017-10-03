@@ -15,3 +15,11 @@ export ReplicaEndpoint =
 export InstanceIdentifier =
 export InstanceClassSmall =
 export InstanceClassBig =
+
+# Notification
+export NotificationSNS =
+export MsgError = [!] ERROR on scaling procedure
+export MsgRoutingToMaster = [1/3] Temporary routing connection to master
+export MsgRoutingToReplica = [3/3] Routing back connection to replica
+export MsgScaleUp = [1/2] Scaling up RDS replica to $InstanceClassBig
+export MsgScaleDown = [1/2] Scaling down RDS replica to $InstanceClassSmall

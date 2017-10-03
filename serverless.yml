@@ -11,12 +11,21 @@ custom:
   InstanceIdentifier: "${env:InstanceIdentifier}"
   InstanceClassSmall: "${env:InstanceClassSmall}"
   InstanceClassBig: "${env:InstanceClassBig}"
+  NotificationSNS: "${env:NotificationSNS}"
+  MsgError: "${env:MsgError}"
+  MsgRoutingToMaster: "${env:MsgRoutingToMaster}"
+  MsgRoutingToReplica: "${env:MsgRoutingToReplica}"
+  MsgScaleUp: "${env:MsgScaleUp}"
+  MsgScaleDown: "${env:MsgScaleDown}"
 
 provider:
   name: aws
   runtime: nodejs6.10
   stage: "${env:ENVIRONMENT}"
   region: "${env:AWS_REGION}"
+  environment:
+    NotificationSNS: "${self:custom.NotificationSNS}"
+    MsgError: "${self:custom.MsgError}"
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -26,11 +35,16 @@ provider:
       Action:
         - "rds:ModifyDBInstance"
       Resource: "arn:aws:rds:${env:AWS_REGION}:${env:AWS_ACCOUNT_ID}:db:${self:custom.InstanceIdentifier}"
+    - Effect: "Allow"
+      Action:
+        - "SNS:Publish"
+      Resource: "${self:custom.NotificationSNS}"
 
 functions:
   routingToMaster:
     handler: route53.changeRecord
     environment:
+      Msg: "${self:custom.MsgRoutingToMaster}"
       HostedZoneId: "${self:custom.HostedZoneId}"
       RecordName: "${self:custom.RecordName}"
       RecordValue: "${self:custom.MasterEndpoint}"
@@ -41,6 +55,7 @@ functions:
   scaleUp:
     handler: rds.scale
     environment:
+      Msg: "${self:custom.MsgScaleUp}"
       InstanceIdentifier: "${self:custom.InstanceIdentifier}"
       InstanceClass: "${self:custom.InstanceClassBig}"
     events:
@@ -49,6 +64,7 @@ functions:
   scaleDown:
     handler: rds.scale
     environment:
+      Msg: "${self:custom.MsgScaleDown}"
       InstanceIdentifier: "${self:custom.InstanceIdentifier}"
       InstanceClass: "${self:custom.InstanceClassSmall}"
     events:
@@ -57,6 +73,7 @@ functions:
   routingToReplica:
     handler: route53.changeRecord
     environment:
+      Msg: "${self:custom.MsgRoutingToReplica}"
       HostedZoneId: "${self:custom.HostedZoneId}"
       RecordName: "${self:custom.RecordName}"
       RecordValue: "${self:custom.ReplicaEndpoint}"

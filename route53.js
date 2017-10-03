@@ -1,6 +1,7 @@
 'use strict';
 const AWS = require('aws-sdk');
-var route53 = new AWS.Route53();
+const route53 = new AWS.Route53();
+const sns = require('./lib/sns.js');
 
 module.exports.changeRecord = (event, context, callback) => {
 
@@ -20,6 +21,14 @@ module.exports.changeRecord = (event, context, callback) => {
       Comment: "managed by lambda"
     },
     HostedZoneId: process.env.HostedZoneId
-  }, callback);
+  }, function(err, data){
+    if(err){
+      sns.error("Cannot change DNS record "+process.env.RecordName+" to value "+process.env.RecordValue, function(){
+        callback(err);
+      })
+    }else{
+      sns.notify(process.env.Msg, callback)
+    }
+  });
 
 };
