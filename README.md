@@ -4,15 +4,18 @@ Scale RDS replice instance in blue/green transferring momentarily the connection
 
 Lambda functions are invoked by CloudWatch cron-scheduled event in this sequence
 ```
-10:00 routingToMaster
-10:10 scaleUp
-10:20 routingToReplica
+08:00 routingToMaster
+08:05 scaleUp
+08:15 routingToReplica
 
-17:00 routingToMaster
-17:10 scaleDown
-17:20 routingToReplica
+15:00 routingToMaster
+15:05 scaleDown
+15:15 routingToReplica
 ```
-this give RDS replica 10minute to complete the scaling process and then re-pointing DNS to replica endpoint.
+this configuration give to RDS replica 10 minute for complete the scaling process and then re-pointing DNS to replica endpoint.
+Is assumed the DNS propagation take around 5 minute.
+
+Times are based on GMT+0 time zone.
 
 ### Getting Start
 

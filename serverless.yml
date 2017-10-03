@@ -35,8 +35,8 @@ functions:
       RecordName: "${self:custom.RecordName}"
       RecordValue: "${self:custom.MasterEndpoint}"
     events:
-      - schedule: cron(00 10 ? * TUE,THU *)
-      - schedule: cron(00 17 ? * TUE,THU *)
+      - schedule: cron(00 08 ? * TUE,THU *)
+      - schedule: cron(00 15 ? * TUE,THU *)
 
   scaleUp:
     handler: rds.scale
@@ -44,7 +44,7 @@ functions:
       InstanceIdentifier: "${self:custom.InstanceIdentifier}"
       InstanceClass: "${self:custom.InstanceClassBig}"
     events:
-      - schedule: cron(10 10 ? * TUE,THU *)
+      - schedule: cron(05 08 ? * TUE,THU *)
 
   scaleDown:
     handler: rds.scale
@@ -52,7 +52,7 @@ functions:
       InstanceIdentifier: "${self:custom.InstanceIdentifier}"
       InstanceClass: "${self:custom.InstanceClassSmall}"
     events:
-      - schedule: cron(10 17 ? * TUE,THU *)
+      - schedule: cron(05 15 ? * TUE,THU *)
 
   routingToReplica:
     handler: route53.changeRecord
@@ -61,5 +61,5 @@ functions:
       RecordName: "${self:custom.RecordName}"
       RecordValue: "${self:custom.ReplicaEndpoint}"
     events:
-      - schedule: cron(20 10 ? * TUE,THU *)
-      - schedule: cron(20 17 ? * TUE,THU *)
+      - schedule: cron(15 08 ? * TUE,THU *)
+      - schedule: cron(15 15 ? * TUE,THU *)
