@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# AWS
+export ENVIRONMENT = <stage | prod>
+export AWS_REGION = <aws region>
+export AWS_ACCOUNT_ID = <aws account id>
+
+# DNS
+export HostedZoneId =
+export RecordName =
+export MasterEndpoint =
+export ReplicaEndpoint =
+
+# Database
+export InstanceIdentifier =
+export InstanceClassSmall =
+export InstanceClassBig =
